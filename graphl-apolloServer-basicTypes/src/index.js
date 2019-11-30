@@ -3,6 +3,7 @@ const { ApolloServer, gql } = require('apollo-server')
 const typeDefs = gql`
     type Query {
         hello:String!
+        user:User
     }
 
     type User {
@@ -10,20 +11,48 @@ const typeDefs = gql`
         username:String!
 
     }
+    type Error {
+        fields: String!
+        message: String!
+    }
+
+    type RegisterResponse {
+        errors:[Error]
+        user:User
+    }
+
+    input UserInfo {
+        username:String! 
+        password:String! 
+        age:Int
+    }
 
     type Mutation {
-        register: User
+        register(input:UserInfo): RegisterResponse
+        login(input:UserInfo): Boolean
     }
 `
 
 const resolvers = {
     Query: {
-        hello: () => 'Hello World!'
-    },
-    Mutation: {
-        register: () => ({
+        hello: () => 'Hello World!',
+        user: () => ({
             id: 1,
             username: 'bob'
+        })
+    },
+    Mutation: {
+        login: () => true,
+        register: () => ({
+            errors: [{
+                fields: 'username',
+                message: 'bad'
+            }],
+            user: {
+                id: 1,
+                username: 'bob'
+            }
+
         })
     }
 }
