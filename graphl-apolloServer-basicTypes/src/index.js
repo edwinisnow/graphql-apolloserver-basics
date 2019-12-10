@@ -9,6 +9,7 @@ const typeDefs = gql`
     type User {
         id:ID!
         username:String!
+        firstLetterOfUsername: String
 
     }
     type Error {
@@ -35,7 +36,13 @@ const typeDefs = gql`
 
 const resolvers = {
     User: {
-        username: () => 'I am username'
+        firstLetterOfUsername: (parent) => {
+            return parent.username[0]
+        },
+        username: (parent) => {
+            console.log("Log: -----> : parent", parent)
+            return parent.username;
+        }
     },
     Query: {
         hello: (parent, { name }) => {
